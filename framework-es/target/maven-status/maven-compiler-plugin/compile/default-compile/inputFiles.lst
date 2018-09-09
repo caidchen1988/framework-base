@@ -1,0 +1,8 @@
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/factory/ElasticSearchClientFactory.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/vo/DocumentVo.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/factory/HostAndPort.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/util/ElasticSearchUtil.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/factory/ElasticSearchConstants.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/factory/ElasticSearchConfiguration.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/exception/ElasticSearchException.java
+/Users/zhangwentong/Applications/GitHub/sakuratears/framework-base/framework-es/src/main/java/com/zwt/framework/es/exception/ElasticSearchExceptionHandler.java

@@ -1,0 +1,8 @@
+com/zwt/framework/es/util/ElasticSearchUtil.class
+com/zwt/framework/es/exception/ElasticSearchException.class
+com/zwt/framework/es/exception/ElasticSearchExceptionHandler.class
+com/zwt/framework/es/factory/ElasticSearchClientFactory.class
+com/zwt/framework/es/factory/ElasticSearchConstants.class
+com/zwt/framework/es/factory/ElasticSearchConfiguration.class
+com/zwt/framework/es/vo/DocumentVo.class
+com/zwt/framework/es/factory/HostAndPort.class

@@ -1,0 +1,3 @@
+com/zwt/framework/utils/util/PropertiesUtils.class
+com/zwt/framework/utils/exception/LocalPropertiesFileNotFoundException.class
+com/zwt/framework/utils/exception/FrameworkException.class
