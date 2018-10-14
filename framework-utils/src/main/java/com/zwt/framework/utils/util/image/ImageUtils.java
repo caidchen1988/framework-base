@@ -7,6 +7,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *  * 图片处理工具类：<br>
@@ -15,23 +18,11 @@ import java.io.IOException;
  *  
  */
 public class ImageUtils {
-    /**
-     *  * 几种常见的图片格式
-     *  
-     */
-    public static String IMAGE_TYPE_GIF = "gif";// 图形交换格式
-    public static String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
-    public static String IMAGE_TYPE_JPEG = "jpeg";// 联合照片专家组
-    public static String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
-    public static String IMAGE_TYPE_PNG = "png";// 可移植网络图形
-    public static String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
-
-    public static final double K=0.618;
 
     /**
      * 程序入口：用于测试
      *
-     * @param args
+     * @param args 入参
      */
     public static void main(String[] args) {
         // 1-缩放图像：
@@ -60,7 +51,9 @@ public class ImageUtils {
 
         // 5-给图片添加文字水印：
         // 方法一：
-        ImageUtils.pressText("我是水印文字水印文字是我我还要写英文，不知道你会不会换行", "C:\\Users\\DELL-3020\\Desktop\\test1.jpg", "C:\\Users\\DELL-3020\\Desktop\\test2.jpg", "宋体", Font.BOLD, Color.RED, 40, 0, 0, 0.5f);
+        //ImageUtils.pressText("我是水印文字水印文字", "C:\\Users\\DELL-3020\\Desktop\\qqqq.jpg", "C:\\Users\\DELL-3020\\Desktop\\qqqq1.jpg", "宋体", Font.BOLD, Color.WHITE, 50, 0, 0, 1.0f);
+
+        drawString("asasa dfdf sfsfsfs, adadad adada asdada adafaf adaafa.",10000,100,5);
 
         // 6-给图片添加图片水印：
         //ImageUtils.pressImage("e:/abc2.jpg", "e:/abc.jpg", "e:/abc_pressImage.jpg", 0, 0, 0.5f);//测试OK
@@ -75,7 +68,7 @@ public class ImageUtils {
      * @param scale        缩放比例
      * @param flag         缩放选择:true 放大; false 缩小;
      */
-    public final static void scale(String srcImageFile, String result,
+    public static void scale(String srcImageFile, String result,
                                    int scale, boolean flag) {
         try {
             BufferedImage src = ImageIO.read(new File(srcImageFile)); // 读入文件
@@ -111,7 +104,7 @@ public class ImageUtils {
      * @param width        缩放后的宽度
      * @param bb           比例不对时是否需要补白：true为补白; false为不补白;
      */
-    public final static void scale2(String srcImageFile, String result, int height, int width, boolean bb) {
+    public static void scale2(String srcImageFile, String result, int height, int width, boolean bb) {
         try {
             double ratio = 0.0; // 缩放比例
             File f = new File(srcImageFile);
@@ -160,7 +153,7 @@ public class ImageUtils {
      * @param width        目标切片宽度
      * @param height       目标切片高度
      */
-    public final static void cut(String srcImageFile, String result,
+    public static void cut(String srcImageFile, String result,
                                  int x, int y, int width, int height) {
         try {
             // 读取源图像
@@ -195,7 +188,7 @@ public class ImageUtils {
      * @param rows         目标切片行数。默认2，必须是范围 [1, 20] 之内
      * @param cols         目标切片列数。默认2，必须是范围 [1, 20] 之内
      */
-    public final static void cut2(String srcImageFile, String descDir,
+    public static void cut2(String srcImageFile, String descDir,
                                   int rows, int cols) {
         try {
             if (rows <= 0 || rows > 20) rows = 2; // 切片行数
@@ -205,11 +198,9 @@ public class ImageUtils {
             int srcWidth = bi.getHeight(); // 源图宽度
             int srcHeight = bi.getWidth(); // 源图高度
             if (srcWidth > 0 && srcHeight > 0) {
-                Image img;
-                ImageFilter cropFilter;
                 Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
-                int destWidth = srcWidth; // 每张切片的宽度
-                int destHeight = srcHeight; // 每张切片的高度
+                int destWidth; // 每张切片的宽度
+                int destHeight; // 每张切片的高度
                 // 计算切片的宽度和高度
                 if (srcWidth % cols == 0) {
                     destWidth = srcWidth / cols;
@@ -239,7 +230,7 @@ public class ImageUtils {
      * @param destWidth    目标切片宽度。默认200
      * @param destHeight   目标切片高度。默认150
      */
-    public final static void cut3(String srcImageFile, String descDir,
+    public static void cut3(String srcImageFile, String descDir,
                                   int destWidth, int destHeight) {
         try {
             if (destWidth <= 0) destWidth = 200; // 切片宽度
@@ -249,11 +240,9 @@ public class ImageUtils {
             int srcWidth = bi.getHeight(); // 源图宽度
             int srcHeight = bi.getWidth(); // 源图高度
             if (srcWidth > destWidth && srcHeight > destHeight) {
-                Image img;
-                ImageFilter cropFilter;
                 Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
-                int cols = 0; // 切片横向数量
-                int rows = 0; // 切片纵向数量
+                int cols; // 切片横向数量
+                int rows; // 切片纵向数量
                 // 计算切片的横向和纵向数量
                 if (srcWidth % destWidth == 0) {
                     cols = srcWidth / destWidth;
@@ -316,7 +305,7 @@ public class ImageUtils {
      * @param formatName    包含格式非正式名称的 String：如JPG、JPEG、GIF等
      * @param destImageFile 目标图像地址
      */
-    public final static void convert(String srcImageFile, String formatName, String destImageFile) {
+    public static void convert(String srcImageFile, String formatName, String destImageFile) {
         try {
             File f = new File(srcImageFile);
             f.canRead();
@@ -335,7 +324,7 @@ public class ImageUtils {
      * @param srcImageFile  源图像地址
      * @param destImageFile 目标图像地址
      */
-    public final static void gray(String srcImageFile, String destImageFile) {
+    public static void gray(String srcImageFile, String destImageFile) {
         try {
             BufferedImage src = ImageIO.read(new File(srcImageFile));
             ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
@@ -362,9 +351,9 @@ public class ImageUtils {
      * @param y             修正值
      * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
      */
-    public final static void pressText(String pressText,
+    public static void pressText(String pressText,
                                        String srcImageFile, String destImageFile, String fontName,
-                                       int fontStyle, Color color, int fontSize, PositionEnum position,int x,
+                                       int fontStyle, Color color, int fontSize, int x,
                                        int y, float alpha) {
         try {
             File img = new File(srcImageFile);
@@ -382,39 +371,12 @@ public class ImageUtils {
             // 在指定坐标绘制水印文字
             g.drawString(pressText, (width - (getLength(pressText) * fontSize))
                     / 2 + x, (height - fontSize) / 2 + y);
-
-            int textLength=getLength(pressText)*fontSize;
-            //超过0.8倍宽度时，文字就不好看了，要换行
-            //暂定0.8,可配置
-            if(textLength>0.8*width){
-
-            }
-
-            switch (position){
-                case CENTER:
-                    break;
-                case TOP:
-                    break;
-                case BOTTOM:
-                    break;
-                case LEFT:
-                    break;
-                case RIGHT:
-                    break;
-                case CUSTOM:
-                    break;
-                default:
-                    break;
-            }
-
             g.dispose();
-            ImageIO.write((BufferedImage) image, "JPEG", new File(destImageFile));// 输出到文件流
+            ImageIO.write(image, "JPEG", new File(destImageFile));// 输出到文件流
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
 
     /**
@@ -427,7 +389,7 @@ public class ImageUtils {
      * @param y             修正值。 默认在中间
      * @param alpha         透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
      */
-    public final static void pressImage(String pressImg, String srcImageFile, String destImageFile,
+    public static void pressImage(String pressImg, String srcImageFile, String destImageFile,
                                         int x, int y, float alpha) {
         try {
             File img = new File(srcImageFile);
@@ -448,7 +410,7 @@ public class ImageUtils {
                     (height - height_biao) / 2, wideth_biao, height_biao, null);
             // 水印文件结束
             g.dispose();
-            ImageIO.write((BufferedImage) image, "JPEG", new File(destImageFile));
+            ImageIO.write(image, "JPEG", new File(destImageFile));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -461,7 +423,7 @@ public class ImageUtils {
      * @param text
      * @return
      */
-    public final static int getLength(String text) {
+    public static int getLength(String text) {
         int length = 0;
         for (int i = 0; i < text.length(); i++) {
             if (new String(text.charAt(i) + "").getBytes().length > 1) {
@@ -473,45 +435,21 @@ public class ImageUtils {
         return length / 2;
     }
 
+    //最大长度参数
+    private static final float K=0.8f;
 
-    /**
-     * 水印位置枚举
-     */
-    public enum PositionEnum{
-        CENTER,
-        LEFT,
-        RIGHT,
-        TOP,
-        BOTTOM,
-        CUSTOM
-    }
+    public static void drawString(String text,int width,int height,int fontSize){
+        //根据空格截取String 数组
+        String [] strings=text.split(" ");
 
-    /**
-     * 根据字符串长度对字符串进行换行
-     * 暂时换两行，太多行的不会
-     * 遵循黄金分割比
-     * @param text
-     * @param textLength  字符串一共的长度，包括字体大小
-     * @param width
-     * @param per
-     * @return
-     */
-    private String[] getNewLine(String text,int textLength,int width,int per){
-        //如果比宽度倍数大，换成两行
-        if(textLength>per*width){
-
+        List<String> list=new ArrayList<>();
+        int length=text.length();
+        int num=(int)Math.ceil(length/10);
+        for(int i=0;i<num;i++){
+            list.add(text.substring(i * 10, (i + 1) * 10));
         }
 
+        System.out.println(list);
     }
-
-    /**
-     * 校验是不是纯中文
-     * @param input
-     * @return
-     */
-    public static boolean isChinese(String input){
-        return input.matches("^[\u4e00-\u9fa5]+$");
-    }
-
 
 }
