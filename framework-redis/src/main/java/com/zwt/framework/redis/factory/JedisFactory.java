@@ -1,7 +1,6 @@
 package com.zwt.framework.redis.factory;
 
 import com.zwt.framework.redis.exception.RedisException;
-import com.zwt.framework.redis.exception.RedisExceptionHandler;
 import com.zwt.framework.utils.util.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -83,7 +82,7 @@ public class JedisFactory {
             }
 
         }catch(Exception ex){
-            RedisExceptionHandler.handleException(ex);
+            throw new RedisException(ex);
         }
 
 

@@ -1,7 +1,6 @@
 package com.zwt.framework.es.factory;
 
 import com.zwt.framework.es.exception.ElasticSearchException;
-import com.zwt.framework.es.exception.ElasticSearchExceptionHandler;
 import com.zwt.framework.utils.util.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.Client;
@@ -65,7 +64,7 @@ public class ElasticSearchClientFactory {
                         esClient = client.addTransportAddresses(transportAddress);
                         logger.info("EalsticSearchClientFactory init is finished");
                     }catch(Exception e){
-                        ElasticSearchExceptionHandler.handleException(e);
+                        throw new ElasticSearchException(e);
                     }
                 }
             }
