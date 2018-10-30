@@ -15,14 +15,16 @@ public class WordCounter {
         this.lastSpace = lastSpace;
     }
 
+    //遍历一个个的Character
     public WordCounter accumulate(Character c){
         if(Character.isWhitespace(c)){
             return lastSpace ? this : new WordCounter(counter,true);
         }else{
+            //上一个字符是空格，而当前遍历的字符不是空格时，将单词计数器加一
             return lastSpace ? new WordCounter(counter+1,false):this;
         }
     }
-
+    //合并两个WordCounter，将其计数器加起来
     public WordCounter combine(WordCounter wordCounter){
         return new WordCounter(counter+wordCounter.counter,wordCounter.lastSpace);
     }

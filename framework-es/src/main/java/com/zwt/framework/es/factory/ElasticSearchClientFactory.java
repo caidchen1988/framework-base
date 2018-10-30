@@ -1,7 +1,6 @@
 package com.zwt.framework.es.factory;
 
 import com.zwt.framework.es.exception.ElasticSearchException;
-import com.zwt.framework.utils.util.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -28,14 +27,20 @@ public class ElasticSearchClientFactory {
     private final static Logger logger = LoggerFactory.getLogger(ElasticSearchClientFactory.class);
 
     private volatile TransportClient esClient;
+    //ES配置
     private ElasticSearchConfiguration esConfig;
 
+    //校验多个ES地址的正则
     private Pattern addRessPattern = Pattern.compile("^.+[:]\\d{1,5}\\s*(;.+[:]\\d{1,5}\\s*)*[;]?\\s*$");
 
     public ElasticSearchClientFactory(final ElasticSearchConfiguration elasticSearchConfiguration){
         this.esConfig=elasticSearchConfiguration;
     }
 
+    /**
+     * 获取一个单例的ESClient
+     * @return
+     */
     public Client getEsClient(){
         if(esClient==null){
             synchronized (ElasticSearchClientFactory.class){
@@ -43,14 +48,17 @@ public class ElasticSearchClientFactory {
                     logger.info("ElasticSearchClientFactory init start...");
                     try{
                         if(StringUtils.isNotBlank(esConfig.getLocalPropertiesPath())){
+                            //获取ES配置信息
                             fillData();
                         }
                         logger.info("ESConfig is:{}",esConfig.toString());
+                        //多个ES地址解析
                         List<HostAndPort> hostAndPortList = this.parseHostAndPortList(esConfig.getAddress());
                         TransportAddress [] transportAddress=new TransportAddress[hostAndPortList.size()];
                         for (int i = 0; i < hostAndPortList.size(); i++) {
                             transportAddress[i] = new TransportAddress(InetAddress.getByName(hostAndPortList.get(i).getIp()), hostAndPortList.get(i).getPort());
                         }
+                        //节点名
                         String nodeName=esConfig.getNodeName()+ UUID.randomUUID();
                         String clusterName=esConfig.getClusterName();
                         Settings.Builder settingsBuilder = Settings.builder();
@@ -61,10 +69,12 @@ public class ElasticSearchClientFactory {
                         settingsBuilder.put("client.transport.sniff", true);
                         Settings settings = settingsBuilder.build();
                         TransportClient client = new PreBuiltTransportClient(settings);
+                        //创建ESClient
                         esClient = client.addTransportAddresses(transportAddress);
                         logger.info("EalsticSearchClientFactory init is finished");
                     }catch(Exception e){
-                        throw new ElasticSearchException(e);
+                        logger.error("EalsticSearchClientFactory create failed",e);
+                        throw new ElasticSearchException("EalsticSearchClientFactory create faile",e);
                     }
                 }
             }
@@ -72,6 +82,10 @@ public class ElasticSearchClientFactory {
         return esClient;
     }
 
+    /**
+     * 获取ES配置信息
+     * @throws ElasticSearchException
+     */
     private void fillData() throws ElasticSearchException {
 
         Properties localProperties = PropertiesUtils.loadLocalProperties(esConfig.getLocalPropertiesPath());
@@ -89,6 +103,12 @@ public class ElasticSearchClientFactory {
         esConfig.setClusterName(clusterName);
     }
 
+    /**
+     * 解析每个ES的端口和地址
+     * @param addressContent
+     * @return
+     * @throws Exception
+     */
     private List<HostAndPort> parseHostAndPortList(String addressContent) throws  Exception{
         try {
             if (StringUtils.isBlank(addressContent)) {

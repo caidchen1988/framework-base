@@ -79,56 +79,61 @@ public class Test2 {
 
         for(int s=0;s<50;s++){
 
+            System.gc();
+            Thread.sleep(2000);
+
             List<Long> cellList=Lists.newArrayList();
 
-            int [] xArrays=new int [10000];
+            int [] xArrays=new int [1000];
+            Random random=new Random();
             for(int i=0;i<xArrays.length;i++){
-                xArrays[i]=1 + (int)(Math.random()*Integer.MAX_VALUE);
+                xArrays[i]=random.nextInt();
             }
-            //System.out.println("当前S值为"+s);
 
-            long start1=System.nanoTime();
-            for(int i=0;i<xArrays.length;i++) {
+            for(int i=0;i<xArrays.length;i++){
+                System.gc();
+                Thread.sleep(2000);
+                long start1=System.nanoTime();
                 stringSize1(xArrays[i]);
-            }
-            long end1=System.nanoTime();
-            long time1=(end1-start1)/1000;
-            System.out.println("JDK方法耗时---》"+time1+"ms");
-            cellList.add(time1);
+                long end1=System.nanoTime();
+                long time1=(end1-start1)/1000;
+                System.out.println("JDK方法耗时---》"+time1+"ms");
+                cellList.add(time1);
 
 
-            long start4=System.nanoTime();
-            for(int i=0;i<xArrays.length;i++) {
+                System.gc();
+                Thread.sleep(2000);
+                long start4=System.nanoTime();
                 stringSize2(xArrays[i]);
-            }
-            long end4=System.nanoTime();
-            long time4=(end4-start4)/1000;
-            System.out.println("乘法耗时---》"+time4+"ms");
-            cellList.add(time4);
+                long end4=System.nanoTime();
+                long time4=(end4-start4)/1000;
+                System.out.println("乘法耗时---》"+time4+"ms");
+                cellList.add(time4);
 
 
-            long start2=System.nanoTime();
-            for(int i=0;i<xArrays.length;i++) {
+                System.gc();
+                Thread.sleep(2000);
+                long start2=System.nanoTime();
                 myStringSize1(xArrays[i]);
-            }
-            long end2=System.nanoTime();
-            long time2=(end2-start2)/1000;
-            System.out.println("String方法耗时---》"+time2+"ms");
-            cellList.add(time2);
+                long end2=System.nanoTime();
+                long time2=(end2-start2)/1000;
+                System.out.println("String方法耗时---》"+time2+"ms");
+                cellList.add(time2);
 
 
-            long start3=System.nanoTime();
-            for(int i=0;i<xArrays.length;i++) {
+                System.gc();
+                Thread.sleep(2000);
+                long start3=System.nanoTime();
                 myStringSize2(xArrays[i]);
+                long end3=System.nanoTime();
+                long time3=(end3-start3)/1000;
+                System.out.println("除法耗时---》"+time3+"ms");
+                cellList.add(time3);
             }
-            long end3=System.nanoTime();
-            long time3=(end3-start3)/1000;
-            System.out.println("除法耗时---》"+time3+"ms");
-            cellList.add(time3);
 
             rowList.add(cellList);
         }
 
-        WriteExcelUtil.writeExecl(titleList,rowList,"/Users/zhangwentong/Desktop/workbook.xlsx");
+        WriteExcelUtil.writeExecl(titleList,rowList,"C:\\Users\\DELL-3020\\Desktop\\workbook.xlsx");
     }
 }

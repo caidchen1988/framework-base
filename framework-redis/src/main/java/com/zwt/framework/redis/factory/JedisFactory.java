@@ -61,6 +61,7 @@ public class JedisFactory {
                 fillData();
             }
             logger.info("redis config is: {}.", redisConfig.toString());
+            //设置参数
             Set<HostAndPort> hostAndPortSet = this.parseHostAndPort(redisConfig.getAddress());
 
             GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
@@ -70,25 +71,25 @@ public class JedisFactory {
             genericObjectPoolConfig.setMaxIdle(redisConfig.getMaxIdle());
 
             if(redisConfig.getMode()== RedisConstants.REDIS_MODE_SINGLE){
+                //创建单机模式的JedisPool
                 HostAndPort hostAndPort=(HostAndPort)hostAndPortSet.toArray()[0];
                 jedisPool=new JedisPool(genericObjectPoolConfig, hostAndPort.getHost(), hostAndPort.getPort(), redisConfig.getTimeout(), null,redisConfig.getDatabase());
                 logger.info("jedisPool init is finished");
             }else{
+                //创建集群模式的JedisPool
                 if(redisConfig.getDatabase()!=0){
                     logger.warn("当前配置的database为："+redisConfig.getDatabase()+",集群模式下不能选择database，只能使用database0");
                 }
                 jedisCluster = new JedisCluster(hostAndPortSet, redisConfig.getTimeout(), redisConfig.getMaxRedirections(), genericObjectPoolConfig);
                 logger.info("jedisCluster init is finished");
             }
-
         }catch(Exception ex){
+            logger.error("jedisCluster init failed",ex);
             throw new RedisException(ex);
         }
-
-
     }
 
-    private void fillData() throws Exception {
+    private void fillData(){
 
         Properties localProperties = PropertiesUtils.loadLocalProperties(redisConfig.getLocalPropertiesPath());
 
@@ -120,14 +121,14 @@ public class JedisFactory {
 
     }
 
-    private Set<HostAndPort> parseHostAndPort(String addressContent) throws Exception {
+    private Set<HostAndPort> parseHostAndPort(String addressContent){
         try {
             if (StringUtils.isBlank(addressContent)) {
-                throw new IllegalArgumentException("redis 连接地址配置不合法");
+                throw new  RedisException("redis 连接地址配置不合法");
             }
             boolean result = addRessPattern.matcher(addressContent).matches();
             if (!result) {
-                throw new IllegalArgumentException("redis 连接地址配置不合法");
+                throw new RedisException("redis 连接地址配置不合法");
             }
             Set<HostAndPort> hostAndPortSet = new HashSet<HostAndPort>();
             String[] addressArrays = addressContent.split(";");
@@ -139,10 +140,8 @@ public class JedisFactory {
                 hostAndPortSet.add(hap);
             }
             return hostAndPortSet;
-        } catch (IllegalArgumentException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new Exception("解析 jedis 配置文件失败", ex);
+        }catch (Exception ex) {
+            throw new RedisException("解析 jedis 配置文件失败", ex);
         }
     }
 }
