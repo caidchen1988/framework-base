@@ -12,7 +12,7 @@ public interface TestInf {
     }
     default void doSomething(){
         doS();
-        System.out.println("just test");
+        System.out.println("just transaction");
     }
 
     void getSomething();
