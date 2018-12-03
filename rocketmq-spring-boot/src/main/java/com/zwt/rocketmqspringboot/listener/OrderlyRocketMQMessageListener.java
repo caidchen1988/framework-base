@@ -33,7 +33,4 @@ public class OrderlyRocketMQMessageListener extends AbstractRocketMQMessageListe
         }
         return ConsumeOrderlyStatus.SUCCESS;
     }
-
-
-
 }

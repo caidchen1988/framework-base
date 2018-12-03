@@ -34,5 +34,4 @@ public class ConcurrentlyRocketMQMessageListener extends AbstractRocketMQMessage
         }
         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
     }
-
 }
