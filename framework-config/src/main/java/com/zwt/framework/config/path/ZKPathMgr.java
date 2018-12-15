@@ -1,4 +1,4 @@
-package com.zwt.framework.zk.path;
+package com.zwt.framework.config.path;
 
 import com.zwt.framework.zk.constants.ZKConstants;
 

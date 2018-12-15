@@ -2,10 +2,11 @@ package com.zwt.framework.config.service;
 
 import com.zwt.framework.config.env.ConfigCenterEnv;
 import com.zwt.framework.config.listener.ConfigCenterListenerAdapter;
+import com.zwt.framework.config.path.ZKPathMgr;
 import com.zwt.framework.zk.client.impl.CuratorZKClient;
 import com.zwt.framework.zk.config.ZKConfig;
+import com.zwt.framework.zk.constants.ZKConstants;
 import com.zwt.framework.zk.listener.ConnectionListener;
-import com.zwt.framework.zk.path.ZKPathMgr;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
@@ -37,9 +38,9 @@ public class ZKConfigService {
         zkClient = new CuratorZKClient(zkConfig);
         zkClient.addConnectionListener(new ConnectionListener() {
             @Override
-            public void stateChanged(ConnectionListener.State state) {
+            public void stateChanged(ZKConstants.State state) {
                 log.debug("ZKConfigService connectionListener state：" + state);
-                if (state == ConnectionListener.State.CONNECTED || state == ConnectionListener.State.RECONNECTED) {
+                if (state == ZKConstants.State.CONNECTED || state == ZKConstants.State.RECONNECTED) {
                     log.info("ZKConfigService zookeeper is connected...");
                 }
             }

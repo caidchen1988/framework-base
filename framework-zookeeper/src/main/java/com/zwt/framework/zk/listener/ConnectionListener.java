@@ -1,5 +1,7 @@
 package com.zwt.framework.zk.listener;
 
+import com.zwt.framework.zk.constants.ZKConstants;
+
 /**
  * @author zwt
  * @detail  连接监听端口
@@ -7,14 +9,5 @@ package com.zwt.framework.zk.listener;
  * @since 1.0
  */
 public interface ConnectionListener {
-    public enum State {
-        /**未连接*/
-        DISCONNECTED,
-        /**已连接*/
-        CONNECTED,
-        /**重新连接*/
-        RECONNECTED
-    }
-
-    void stateChanged(State state);
+    void stateChanged(ZKConstants.State state);
 }

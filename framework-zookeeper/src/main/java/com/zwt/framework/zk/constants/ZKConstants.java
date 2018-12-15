@@ -7,12 +7,12 @@ package com.zwt.framework.zk.constants;
  * @since 1.0
  */
 public class ZKConstants {
-    /**
-     * 定义的一些常量
-     */
-    public final static String SEP_STRING = "/";
-    /**
-     * zookeeper的一些常量设置
-     */
-    public final static String FRAMEWORK_CONFIG_PATH_KEY = "config";
+    public enum State {
+        /**未连接*/
+        DISCONNECTED,
+        /**已连接*/
+        CONNECTED,
+        /**重新连接*/
+        RECONNECTED
+    }
 }
