@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zwt.frameworkdatasource.mapper.TeacherMapper">
+  <resultMap id="BaseResultMap" type="com.zwt.frameworkdatasource.model.TeacherModel">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="teach_no" jdbcType="VARCHAR" property="teachNo" />
+    <result column="teach_name" jdbcType="VARCHAR" property="teachName" />
+    <result column="teach_sex" jdbcType="CHAR" property="teachSex" />
+    <result column="teach_birthday" jdbcType="DATE" property="teachBirthday" />
+    <result column="teach_depart" jdbcType="VARCHAR" property="teachDepart" />
+    <result column="teach_prof" jdbcType="VARCHAR" property="teachProf" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, teach_no, teach_name, teach_sex, teach_birthday, teach_depart, teach_prof
+  </sql>
+  <select id="selectByExample" parameterType="com.zwt.frameworkdatasource.model.TeacherCriteria" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="mysqlOffset != null and mysqlLength != null">
+      <![CDATA[ limit #{mysqlOffset} , #{mysqlLength} ]]>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from teacher
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from teacher
+    where id = #{id}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zwt.frameworkdatasource.model.TeacherCriteria">
+    delete from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zwt.frameworkdatasource.model.TeacherModel">
+    insert into teacher (id, teach_no, teach_name, teach_sex, teach_birthday, teach_depart, 
+      teach_prof)
+    values (#{id}, #{teachNo}, #{teachName}, #{teachSex}, #{teachBirthday}, #{teachDepart}, 
+      #{teachProf})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zwt.frameworkdatasource.model.TeacherModel">
+    insert into teacher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="teachNo != null">
+        teach_no,
+      </if>
+      <if test="teachName != null">
+        teach_name,
+      </if>
+      <if test="teachSex != null">
+        teach_sex,
+      </if>
+      <if test="teachBirthday != null">
+        teach_birthday,
+      </if>
+      <if test="teachDepart != null">
+        teach_depart,
+      </if>
+      <if test="teachProf != null">
+        teach_prof,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="teachNo != null">
+        #{teachNo},
+      </if>
+      <if test="teachName != null">
+        #{teachName},
+      </if>
+      <if test="teachSex != null">
+        #{teachSex},
+      </if>
+      <if test="teachBirthday != null">
+        #{teachBirthday},
+      </if>
+      <if test="teachDepart != null">
+        #{teachDepart},
+      </if>
+      <if test="teachProf != null">
+        #{teachProf},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zwt.frameworkdatasource.model.TeacherCriteria" resultType="java.lang.Integer">
+    select count(*) from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update teacher
+    <set>
+      <if test="record.id != null">
+        id = #{record.id},
+      </if>
+      <if test="record.teachNo != null">
+        teach_no = #{record.teachNo},
+      </if>
+      <if test="record.teachName != null">
+        teach_name = #{record.teachName},
+      </if>
+      <if test="record.teachSex != null">
+        teach_sex = #{record.teachSex},
+      </if>
+      <if test="record.teachBirthday != null">
+        teach_birthday = #{record.teachBirthday},
+      </if>
+      <if test="record.teachDepart != null">
+        teach_depart = #{record.teachDepart},
+      </if>
+      <if test="record.teachProf != null">
+        teach_prof = #{record.teachProf},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update teacher
+    set id = #{record.id},
+      teach_no = #{record.teachNo},
+      teach_name = #{record.teachName},
+      teach_sex = #{record.teachSex},
+      teach_birthday = #{record.teachBirthday},
+      teach_depart = #{record.teachDepart},
+      teach_prof = #{record.teachProf}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zwt.frameworkdatasource.model.TeacherModel">
+    update teacher
+    <set>
+      <if test="teachNo != null">
+        teach_no = #{teachNo},
+      </if>
+      <if test="teachName != null">
+        teach_name = #{teachName},
+      </if>
+      <if test="teachSex != null">
+        teach_sex = #{teachSex},
+      </if>
+      <if test="teachBirthday != null">
+        teach_birthday = #{teachBirthday},
+      </if>
+      <if test="teachDepart != null">
+        teach_depart = #{teachDepart},
+      </if>
+      <if test="teachProf != null">
+        teach_prof = #{teachProf},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zwt.frameworkdatasource.model.TeacherModel">
+    update teacher
+    set teach_no = #{teachNo},
+      teach_name = #{teachName},
+      teach_sex = #{teachSex},
+      teach_birthday = #{teachBirthday},
+      teach_depart = #{teachDepart},
+      teach_prof = #{teachProf}
+    where id = #{id}
+  </update>
+</mapper>
