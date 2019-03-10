@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+    <title>配置中心管理平台</title><meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css" />
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/matrix-style.css" />
+    <link rel="stylesheet" href="/css/matrix-media.css" />
+
+    <link rel="stylesheet" href="/css/colorpicker.css" />
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <link rel="stylesheet" href="/css/uniform.css" />
+    <link rel="stylesheet" href="/css/select2.css" />
+    <link rel="stylesheet" href="/css/bootstrap-wysihtml5.css" />
+
+    <script src="/js/jquery.min.js" charset="utf-8"></script>
+    <script src="/js/jquery.ui.custom.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/echarts.min.js"></script>
+    <script src="/js/bootstrap-colorpicker.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+
+    <script src="/js/jquery.validate.js"></script>
+    <script src="/js/matrix.form_validation.js"></script>
+    <script src="/js/jquery.wizard.js"></script>
+    <script src="/js/jquery.uniform.js"></script>
+    <script src="/js/select2.min.js"></script>
+
+    <script src="/js/jquery.dataTables.min.js"></script>
+
+    <!-- 公共js -->
+
+    <script type="text/javascript">
+        var ctx = "";
+    </script>
+
+    <style type="text/css">
+    </style>
+    <link rel="stylesheet" href="/css/matrix-login.css" />
+</head>
+<body>
+<div id="loginbox">
+    <form id="loginform" class="form-vertical">
+        <div class="control-group normal_text"> <h2>配置中心管理平台</h2></div>
+        <div class="control-group">
+            <div class="controls">
+                <div class="main_input_box">
+                    <span class="add-on bg_lg"><i class="icon-user"></i></span><input type="text" id="iUserName" name="iUserName" placeholder="用户名" />
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <div class="main_input_box">
+                    <span class="add-on bg_ly"><i class="icon-lock"></i></span><input type="password" id="iPassword" name="iPassword" placeholder="密码" />
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-success block full-width m-b" onclick="doLogin()">登 录</button>
+        </div>
+
+    </form>
+
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        //回车提交事件
+        $("#iUserName").keyup(function(e){
+            if(e.keyCode==13){
+                $("#iPassword").focus();
+            }
+        });
+        $("#iPassword").keyup(function(e){
+            if(e.keyCode==13){
+                $("#loginButton").click();
+            }
+        });
+
+
+    });
+
+    function doLogin(){
+        if($("#iUserName").val() == null || $("#iUserName").val()==''){
+            alert('请输入用户名!');
+            return;
+        }
+        var iUserName = $("#iUserName").val();
+
+        if($("#iPassword").val() == null || $("#iPassword").val() == ''){
+            alert('请输入密码!');
+            return;
+        }
+        var iPassword = $("#iPassword").val();
+
+        $.ajax({
+            url: "/login/doLogin",
+            type:"post",
+            data: {iUserName:iUserName,iPassword:iPassword},
+            success:function(result){
+                if(result  == '1'){
+                    window.location = '/main.html';
+                }else{
+                    $("#iUserName").focus();
+                    alert('用户名或密码错误,请重新输入！');
+                }
+            },
+            dataType:"json"
+        });
+    }
+
+
+
+</script>
+</body>
+
+</html>

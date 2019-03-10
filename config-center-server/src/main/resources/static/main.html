@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+    <title>配置中心管理平台</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css" />
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/matrix-style.css" />
+    <link rel="stylesheet" href="/css/matrix-media.css" />
+    <link rel="stylesheet" href="/css/colorpicker.css" />
+    <link rel="stylesheet" href="/css/datepicker.css" />
+    <link rel="stylesheet" href="/css/uniform.css" />
+    <link rel="stylesheet" href="/css/select2.css" />
+    <link rel="stylesheet" href="/css/bootstrap-wysihtml5.css" />
+    <script src="/js/jquery.min.js" charset="utf-8"></script>
+    <script src="/js/jquery.ui.custom.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/echarts.min.js"></script>
+    <script src="/js/bootstrap-colorpicker.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    <script src="/js/matrix.form_validation.js"></script>
+    <script src="/js/jquery.wizard.js"></script>
+    <script src="/js/jquery.uniform.js"></script>
+    <script src="/js/select2.min.js"></script>
+
+
+    <script src="/js/jquery.dataTables.min.js"></script>
+
+
+    <!-- 公共js -->
+
+    <script type="text/javascript">
+        var ctx = "";
+    </script>
+
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+
+
+<!--Header-part-->
+<div id="header">
+    <h3>配置中心管理平台</h3>
+</div>
+<!--close-Header-part-->
+
+<!--top-Header-menu-->
+<div id="user-nav" class="navbar navbar-inverse">
+    <ul class="nav">
+        <li  class="dropdown" id="profile-messages" ><a title="" href="#" data-toggle="dropdown" data-target="#profile-messages" class="dropdown-toggle"><i class="icon icon-user"></i>  <span class="text">用户： admin</span><b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#"><i class="icon-user"></i> 我的信息</a></li>
+                <li class="divider"></li>
+                <li><a href="#"><i class="icon-check"></i> 任务列表</a></li>
+                <li class="divider"></li>
+                <li><a href="/logout"><i class="icon-key"></i> 退出</a></li>
+            </ul>
+        </li>
+        <li class=""><a title="" href="/system/settings"><i class="icon icon-cog"></i> <span class="text">设置</span></a></li>
+        <li class=""><a title="" href="/logout"><i class="icon icon-share-alt"></i> <span class="text">退出</span></a></li>
+    </ul>
+</div>
+
+
+
+
+<!--sidebar-menu-->
+
+<div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-list"></i>Forms</a>
+    <ul>
+        <li class="active"><a href="/main"><i class="icon icon-home"></i> <span>控制面板</span></a> </li>
+
+
+
+    </ul>
+</div>
+
+<!--close-left-menu-stats-sidebar-->
+
+<div id="content">
+
+
+    <div id="content-header">
+        <div id="breadcrumb"><a href="/" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">控制面板</a></div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div id="div-check-result"></div>
+                    <div class="widget-title" >
+                        <span style="padding-left: 5px">
+                            zk连接串：
+                            <select id="connectString" name="connectString" style="width: 150px;" onchange="init()">
+
+                                    <option value="127.0.0.1:2181">开发</option>
+                                    <option value="127.0.0.1:2182">测试</option>
+                                    <option value="127.0.0.1:2183">预生产</option>
+
+
+                            </select>
+                            命名空间：
+                            <select id="nameSpace" name="nameSpace" style="width: 150px;" onchange="init()">
+                                <option value="hello1">hello1</option>
+                                <option value="hello2">hello2</option>
+                            </select>
+                            <button type='button' class='btn btn-info' onclick="getKeyList()" style="margin-bottom: 10px">连接</button>
+                            <button type='button' id="btn_addBtn" class='btn btn-primary' onclick="addZkData()"  style="margin-bottom: 10px;display: none">新增Key</button>
+                            <input type="text" id="txt_key" name="txt_key" value="" style="margin-bottom: 10px;display: none">
+                            <button type='button' id="btn_searchBtn" class='btn btn-success' onclick="getKeyList()"  style="margin-bottom: 10px;display: none">查找Key</button>
+                        </span>
+                    </div>
+                    <div class="widget-title"><span class="icon"> <i class="icon-th"></i> </span>
+                        <h5>配置中心key列表</h5>
+                        <span id="keyNum" class="label label-info"></span>
+                    </div>
+                    <div id="div-result">
+                    </div>
+                    <div class="widget-content nopadding">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>KEY</th>
+                                <th>操作</th>
+                                <th>KEY</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="edit_table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- editZkData信息框（Modal） -->
+<div class="modal fade" id="editZkDataModal" tabindex="-1" role="dialog" aria-labelledby="editZkDataLabel" aria-hidden="true" style="display: none">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="editZkDataLabel">配置值</h4>
+            </div>
+            <div class="modal-body">
+                key:<input type="text" id="zkDataKey" name="zkDataKey" value="" style="width: 98%"/>
+                <p>
+                    value:<textarea id="zkDataValue" rows="6" style="width: 98%"></textarea>
+                <p>
+                    描述:<textarea id="describe" rows="4" style="width: 98%"></textarea>
+                <p>
+                    更新时间:<span id="span_updateTime"></span>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_saveZKData" type="button" class="btn btn-primary" onclick="saveZKData()">保存</button>
+                <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.tip').tooltip();
+        $('.tip-left').tooltip({ placement: 'left' });
+        $('.tip-right').tooltip({ placement: 'right' });
+        $('.tip-top').tooltip({ placement: 'top' });
+        $('.tip-bottom').tooltip({ placement: 'bottom' });
+    });
+
+    function init() {
+        $('#btn_addBtn').hide();
+        $('#btn_searchBtn').hide();
+        $('#txt_key').hide();
+        $('#txt_key').val("");
+        $("#edit_table").html("");
+        $("#keyNum").html("");
+
+    }
+    function getKeyList() {
+        $.ajax({
+            url: "/main/getKeyList",
+            type:"post",
+            data: {
+                "connectString": $("#connectString").val(),
+                "nameSpace": $("#nameSpace").val(),
+                "key": $("#txt_key").val()
+            },
+            success: function (result) {
+                if (result.code == "1") {
+                    var keyList=result.data;
+                    var str_html="";
+                    for(var i=0;i<keyList.length;i++){
+                        str_html+= "<tr class=\"odd gradeX\">";
+                        for(var j=0;j<3;j++){
+                            if(i<keyList.length){
+                                var obj = keyList[i];
+                                str_html+= "<td style=\"text-align: center\">"+obj+"</td>";
+                                str_html+= "<td style=\"text-align: center\">";
+                                str_html+= "    <button type='button' class='btn btn-info btn-mini' data-toggle='modal' onclick='editZkData(\""+obj+"\")'>编辑</button> ";
+                                str_html+= "    <button type='button' class='btn btn-danger btn-mini' onclick='if(confirm(\"是否确认删除？\")){deleteZKData(\""+obj+"\")}'>删除</button>";
+                                str_html+= "</td>";
+                            }else{
+                                str_html+= "<td style=\"text-align: center\"></td>";
+                                str_html+= "<td style=\"text-align: center\">";
+                                str_html+= "</td>";
+                            }
+                            if(j<2){
+                                i++;
+                            }
+                        }
+                        str_html+= "</tr>";
+                    }
+                    $("#edit_table").html(str_html);
+                    $("#keyNum").html("当前命名空间key："+keyList.length+"个");
+                    $("#btn_addBtn").show();
+                    $('#btn_searchBtn').show();
+                    $('#txt_key').show();
+                }else{
+                    $("#div-result").html("" +
+                        "<div class=\"alert alert-error alert-block\">" +
+                        "   <a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" +
+                        "   <h4 class=\"alert-heading\">" + result.message + "</div>" +
+                        "</div>");
+                    clear();
+                }
+
+            },
+            async : false,
+            dataType: "json"
+        });
+
+
+
+    }
+
+    function addZkData(key) {
+        $("#editZkDataLabel").text("新增KEY");
+        $("#zkDataKey").val("");
+        $("#zkDataValue").val("");
+        $("#describe").val("");
+        $("#span_updateTime").html("");
+        $('#editZkDataModal').modal('show');
+    }
+
+    function editZkData(key) {
+        $.ajax({
+            url: "/main/showZKData",
+            type:"post",
+            data: {
+                "connectString": $("#connectString").val(),
+                "nameSpace": $("#nameSpace").val(),
+                "key": key
+            },
+            success: function (result) {
+                if (result.code == "1") {
+                    $("#editZkDataLabel").text("更新Key值");
+                    $("#zkDataKey").val(key);
+                    $("#zkDataValue").val(result.data.value);
+                    $("#describe").val(result.data.describe);
+                    $("#span_updateTime").html(result.data.updateTime);
+                    $('#editZkDataModal').modal('show');
+                }else{
+                    $("#div-result").html("" +
+                        "<div class=\"alert alert-error alert-block\">" +
+                        "   <a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" +
+                        "   <h4 class=\"alert-heading\">" + result.message + "</div>" +
+                        "</div>");
+                }
+
+            },
+            async : false,
+            dataType: "json"
+        });
+    }
+
+    function saveZKData() {
+        $.ajax({
+            url: "/main/saveZKData",
+            type:"post",
+            data: {
+                "connectString": $("#connectString").val(),
+                "nameSpace": $("#nameSpace").val(),
+                "key": $("#zkDataKey").val(),
+                "value":$("#zkDataValue").val(),
+                "describe":$("#describe").val()
+            },
+            success: function (result) {
+                var alert_color="alert-success";
+                if (result.code != "1") {
+                    alert_color="alert-error";
+                }else{
+                    getKeyList();
+                }
+                $('#editZkDataModal').modal('hide');
+                $("#div-result").html("" +
+                    "<div class=\"alert "+alert_color+" alert-block\">" +
+                    "   <a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" +
+                    "   <h4 class=\"alert-heading\">" + result.message + "</div>" +
+                    "</div>");
+
+            },
+            async : false,
+            dataType: "json"
+        });
+    }
+
+    function deleteZKData(key) {
+        $.ajax({
+            url: "/main/deleteZKData",
+            type:"post",
+            data: {
+                "connectString": $("#connectString").val(),
+                "nameSpace": $("#nameSpace").val(),
+                "key": key
+            },
+            success: function (result) {
+                var alert_color="alert-success";
+                if (result.code != "1") {
+                    alert_color="alert-error";
+                }else{
+                    getKeyList();
+                }
+                $('#editZkDataModal').modal('hide');
+                $("#div-result").html("" +
+                    "<div class=\"alert "+alert_color+" alert-block\">" +
+                    "   <a class=\"close\" data-dismiss=\"alert\" href=\"#\">×</a>" +
+                    "   <h4 class=\"alert-heading\">" + result.message + "</div>" +
+                    "</div>");
+
+            },
+            async : false,
+            dataType: "json"
+        });
+    }
+
+</script>
+
+</body>
+</html>
