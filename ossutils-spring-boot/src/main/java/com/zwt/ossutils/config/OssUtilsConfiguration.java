@@ -1,9 +1,11 @@
 package com.zwt.ossutils.config;
 
 import com.zwt.ossutils.upload.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 /**
  * @author zwt
@@ -19,43 +21,32 @@ public class OssUtilsConfiguration {
     @Value("${file.upload.server.type}")
     private String uploadServerType;
 
-    @Value("${s3.accessKey}")
+    @Autowired
+    private Environment environment;
+
+    /**
+     * 亚马逊S3配置
+     */
     private String s3accessKey;
-
-    @Value("${s3.secretKey}")
     private String s3secretKey;
-
-    @Value("${s3.endpoint}")
     private String s3endpoint;
-
-    @Value("${s3.bucket}")
     private String s3bucket;
 
-    @Value("${aliyun.accessKey}")
+    /**
+     * 阿里云OSS配置
+     */
     private String aliyunAccessKey;
-
-    @Value("${aliyun.secretKey}")
     private String aliyunSecretKey;
-
-    @Value("${aliyun.bucket}")
     private String aliyunBucket;
-
-    @Value("${aliyun.endpoint}")
     private String aliyunEndpoint;
-
-    @Value("${aliyun.endpointexternal}")
     private String aliyunEndpointexternal;
 
-    @Value("${azure.accountName}")
+    /**
+     * 微软Azure配置
+     */
     private String azureAccountName;
-
-    @Value("${azure.accountKey}")
     private String azureAccountKey;
-
-    @Value("${azure.endpointSuffix}")
     private String azureEndpointSuffix;
-
-    @Value("${azure.containerName}")
     private String azureContainerName;
 
     /**
@@ -68,13 +59,29 @@ public class OssUtilsConfiguration {
         UploadServerEnum uploadServerEnum = UploadServerEnum.getEnum(uploadServerType);
         UploadAbstractUtil uploadAbstractUtil;
         switch (uploadServerEnum){
+            //亚马逊s3
             case AMAZON:
+                s3accessKey = environment.getRequiredProperty("s3.accessKey");
+                s3secretKey = environment.getRequiredProperty("s3.secretKey");
+                s3endpoint = environment.getRequiredProperty("s3.endpoint");
+                s3bucket = environment.getRequiredProperty("s3.bucket");
                 uploadAbstractUtil = new AmazonS3UploadUtil(basedir,s3accessKey,s3secretKey,s3endpoint,s3bucket);
                 return uploadAbstractUtil;
+            //阿里云OSS
             case ALIOSS:
+                aliyunAccessKey = environment.getRequiredProperty("aliyun.accessKey");
+                aliyunSecretKey = environment.getRequiredProperty("aliyun.secretKey");
+                aliyunBucket = environment.getRequiredProperty("aliyun.bucket");
+                aliyunEndpoint = environment.getRequiredProperty("aliyun.endpoint");
+                aliyunEndpointexternal = environment.getRequiredProperty("aliyun.endpointexternal");
                 uploadAbstractUtil = new AliOssUploadUtil(basedir,aliyunAccessKey,aliyunSecretKey,aliyunEndpoint,aliyunEndpointexternal,aliyunBucket);
                 return uploadAbstractUtil;
+            //微软Azure
             case AZURE:
+                azureAccountName = environment.getRequiredProperty("azure.accountName");
+                azureAccountKey = environment.getRequiredProperty("azure.accountKey");
+                azureEndpointSuffix = environment.getRequiredProperty("azure.endpointSuffix");
+                azureContainerName = environment.getRequiredProperty("azure.containerName");
                 uploadAbstractUtil = new AzureUploadUtil(basedir,azureAccountName,azureAccountKey,azureEndpointSuffix,azureContainerName);
                 return uploadAbstractUtil;
             default:
