@@ -59,6 +59,17 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.8.9.1</version>
         </dependency>
+        <!-- 腾讯云cos -->
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

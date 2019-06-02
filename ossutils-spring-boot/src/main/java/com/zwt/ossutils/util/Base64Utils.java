@@ -81,6 +81,40 @@ public class Base64Utils {
         if(imgStr.contains(",")){
             imgStr = imgStr.split(",")[1];
         }
+
+        BASE64Decoder decoder = new BASE64Decoder();
+        try(OutputStream out = new FileOutputStream(imgFilePath)){
+            // Base64解码
+            byte[] b = decoder.decodeBuffer(imgStr);
+            for (int i = 0; i < b.length; ++i) {
+                // 调整异常数据
+                if (b[i] < 0) {
+                    b[i] += 256;
+                }
+            }
+            out.write(b);
+            out.flush();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * base64 字符串转字节
+     * @param imgStr
+     * @return
+     */
+    public static byte[] Base64ToByte(String imgStr){
+        // 图像数据为空
+        if (StringUtils.isEmpty(imgStr)) {
+            throw new RuntimeException("图片base64数据不能为空");
+        }
+        //如果包含 data:image/jpeg;base64, 前缀需要去掉
+        if(imgStr.contains(",")){
+            imgStr = imgStr.split(",")[1];
+        }
         BASE64Decoder decoder = new BASE64Decoder();
         try {
             // Base64解码
@@ -91,13 +125,9 @@ public class Base64Utils {
                     b[i] += 256;
                 }
             }
-            OutputStream out = new FileOutputStream(imgFilePath);
-            out.write(b);
-            out.flush();
-            out.close();
-            return true;
-        } catch (Exception e) {
-            return false;
+            return b;
+        }catch(IOException e){
+            throw new RuntimeException(e);
         }
     }
 }

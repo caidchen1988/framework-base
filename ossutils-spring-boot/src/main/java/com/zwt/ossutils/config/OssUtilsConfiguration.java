@@ -50,6 +50,16 @@ public class OssUtilsConfiguration {
     private String azureContainerName;
 
     /**
+     * 腾讯云COS配置
+     */
+    private String qAccessKey;
+    private String qSecretKey;
+    private String qBucket;
+    private String qRegion;
+    private String qEndpoint;
+    private String qEndpointExternal;
+
+    /**
      * 根据配置的 file.upload.server.type 选择一个上传服务器
      * @return
      */
@@ -83,6 +93,15 @@ public class OssUtilsConfiguration {
                 azureEndpointSuffix = environment.getRequiredProperty("azure.endpointSuffix");
                 azureContainerName = environment.getRequiredProperty("azure.containerName");
                 uploadAbstractUtil = new AzureUploadUtil(basedir,azureAccountName,azureAccountKey,azureEndpointSuffix,azureContainerName);
+                return uploadAbstractUtil;
+            case TENCENTCOS:
+                qAccessKey = environment.getRequiredProperty("tencent.accessKey");
+                qSecretKey = environment.getRequiredProperty("tencent.secretKey");
+                qBucket = environment.getRequiredProperty("tencent.bucket");
+                qEndpoint = environment.getRequiredProperty("tencent.endpoint");
+                qRegion = environment.getRequiredProperty("tencent.region");
+                qEndpointExternal = environment.getRequiredProperty("tencent.endpointexternal");
+                uploadAbstractUtil = new TencentCOSUploadUtil(basedir,qAccessKey,qSecretKey,qBucket,qRegion,qEndpoint,qEndpointExternal);
                 return uploadAbstractUtil;
             default:
                 throw new RuntimeException("暂不支持其他类型的云上传！！！");

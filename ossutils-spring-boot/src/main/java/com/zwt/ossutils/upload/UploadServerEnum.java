@@ -20,7 +20,11 @@ public enum  UploadServerEnum {
     /**
      * 微软azure
      */
-    AZURE("azure","微软Azure");
+    AZURE("azure","微软Azure"),
+    /**
+     * 腾讯云cos
+     */
+    TENCENTCOS("tencent_cos","腾讯云cos");
 
     private String value;
     private String desc;
