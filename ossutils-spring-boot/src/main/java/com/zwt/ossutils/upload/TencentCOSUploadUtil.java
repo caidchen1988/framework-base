@@ -20,13 +20,12 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @Author: zwt
- * @Description: 腾讯云COS上传
- * @Name: TencentCOSUploadUtil
- * @Date: 2019/6/2 9:28 AM
- * @Version: 1.0
+ * @author zwt
+ * @detail 腾讯云COS上传
+ * @date 2019/6/4
+ * @since 1.0
  */
-public class TencentCOSUploadUtil extends UploadAbstractUtil {
+public class TencentCOSUploadUtil extends AbstractUploadUtil {
 
     public static final Logger logger = LoggerFactory.getLogger(TencentCOSUploadUtil.class);
     /**
@@ -68,6 +67,7 @@ public class TencentCOSUploadUtil extends UploadAbstractUtil {
         this.qRegion = qRegion;
         this.qEndpoint = qEndpoint;
         this.qEndpointExternal = qEndpointExternal;
+        initClient();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class TencentCOSUploadUtil extends UploadAbstractUtil {
     @Override
     protected String upload(byte[] bytes, String contentType) {
         initClient();
-        String realName = UUID.randomUUID().toString() + ".jpg";
+        String realName = UUID.randomUUID().toString() + IMAGE_JPG;
         try (InputStream is = new ByteArrayInputStream(bytes)) {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentEncoding(StandardCharsets.UTF_8.name());
@@ -146,6 +146,7 @@ public class TencentCOSUploadUtil extends UploadAbstractUtil {
     /**
      * shutdown Client
      */
+    @Override
     public void shutdown(){
         cosClient.shutdown();
     }

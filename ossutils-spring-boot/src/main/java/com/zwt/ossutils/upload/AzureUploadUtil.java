@@ -20,7 +20,7 @@ import java.util.UUID;
  * @date 2019/4/30
  * @since 1.0
  */
-public class AzureUploadUtil extends UploadAbstractUtil{
+public class AzureUploadUtil extends AbstractUploadUtil {
     /**
      * 用户名
      */
@@ -61,6 +61,7 @@ public class AzureUploadUtil extends UploadAbstractUtil{
         this.endPoint = endPoint;
         this.containerName = containerName;
         this.storageConnectionString = "DefaultEndpointsProtocol=https;AccountName="+ accountName +";AccountKey="+ accountKey +";EndpointSuffix=" + endPoint;
+        initClient();
     }
 
     /**
@@ -120,6 +121,9 @@ public class AzureUploadUtil extends UploadAbstractUtil{
             try{
                 CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
                 blobClient = storageAccount.createCloudBlobClient();
+                BlobRequestOptions blobRequestOptions = new BlobRequestOptions();
+                blobRequestOptions.setTimeoutIntervalInMs(UPLOAD_TIMEOUT);
+                blobClient.setDefaultRequestOptions(blobRequestOptions);
             }catch (URISyntaxException|InvalidKeyException e){
                 logger.error("使用微软Azure初始化client失败！",e);
                 throw new RuntimeException(e);
@@ -130,7 +134,7 @@ public class AzureUploadUtil extends UploadAbstractUtil{
     @Override
     protected String upload(byte[] bytes, String contentType) {
         initClient();
-        String realName = UUID.randomUUID().toString() + ".jpg";
+        String realName = UUID.randomUUID().toString() + IMAGE_JPG;
         try(InputStream is = new ByteArrayInputStream(bytes)){
             CloudBlobContainer container = blobClient.getContainerReference(containerName);
             // Create the container if it does not exist with public access.
@@ -143,5 +147,10 @@ public class AzureUploadUtil extends UploadAbstractUtil{
             logger.error("使用微软Azure上传文件出现异常",e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected void shutdown() {
+        blobClient = null;
     }
 }

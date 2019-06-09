@@ -22,9 +22,21 @@ public enum  UploadServerEnum {
      */
     AZURE("azure","微软Azure"),
     /**
-     * 腾讯云cos
+     * 腾讯云COS
      */
-    TENCENTCOS("tencent_cos","腾讯云cos");
+    TENCENTCOS("tencent_cos","腾讯云COS"),
+    /**
+     * 百度云BOS
+     */
+    BAIDUBOS("baidu_bos","百度云BOS"),
+    /**
+     * 七牛云存储
+     */
+    QINIUYUN("qiniu_yun","七牛云存储"),
+    /**
+     * 华为OBS
+     */
+    HUAWEIOBS("huawei_obs","华为OBS");
 
     private String value;
     private String desc;

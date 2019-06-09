@@ -1,5 +1,6 @@
 package com.zwt.ossutils.upload;
 
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @date 2019/4/30
  * @since 1.0
  */
-public class AliOssUploadUtil extends UploadAbstractUtil{
+public class AliOssUploadUtil extends AbstractUploadUtil {
 
     public static final Logger logger = LoggerFactory.getLogger(AliOssUploadUtil.class);
     /**
@@ -66,6 +67,7 @@ public class AliOssUploadUtil extends UploadAbstractUtil{
         this.aliyunendpoint = aliyunendpoint;
         this.aliyunendpointexternal = aliyunendpointexternal;
         this.aliyunbucket = aliyunbucket;
+        initClient();
     }
 
     /**
@@ -120,14 +122,17 @@ public class AliOssUploadUtil extends UploadAbstractUtil{
     @Override
     protected void initClient() {
         if(ossClient == null){
-            ossClient = new OSSClient(aliyunendpoint, aliyunaccessKey, aliyunsecretKey);
+            ClientConfiguration clientConfiguration = new ClientConfiguration();
+            clientConfiguration.setConnectionTimeout(CONNECT_TIMEOUT);
+            clientConfiguration.setSocketTimeout(UPLOAD_TIMEOUT);
+            ossClient = new OSSClient(aliyunendpoint, aliyunaccessKey, aliyunsecretKey,clientConfiguration);
         }
     }
 
     @Override
     protected String upload(byte[] bytes, String contentType) {
         initClient();
-        String realName = UUID.randomUUID().toString() + ".jpg";
+        String realName = UUID.randomUUID().toString() + IMAGE_JPG;
         try (InputStream is = new ByteArrayInputStream(bytes)) {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentEncoding(StandardCharsets.UTF_8.name());
@@ -150,6 +155,7 @@ public class AliOssUploadUtil extends UploadAbstractUtil{
     /**
      * shutdown Client
      */
+    @Override
     public void shutdown(){
         ossClient.shutdown();
     }

@@ -26,7 +26,7 @@ import java.util.UUID;
  * @date 2019/4/30
  * @since 1.0
  */
-public class AmazonS3UploadUtil extends UploadAbstractUtil{
+public class AmazonS3UploadUtil extends AbstractUploadUtil {
     /**
      * S3 accessKey
      */
@@ -68,6 +68,7 @@ public class AmazonS3UploadUtil extends UploadAbstractUtil{
         this.s3secretKey = s3secretKey;
         this.s3endpoint = s3endpoint;
         this.s3bucket = s3bucket;
+        initClient();
     }
 
     /**
@@ -127,6 +128,8 @@ public class AmazonS3UploadUtil extends UploadAbstractUtil{
             AWSCredentials credential = new BasicAWSCredentials(s3accessKey, s3secretKey);
             ClientConfiguration clientConfig = new ClientConfiguration();
             clientConfig.setProtocol(protocol);
+            clientConfig.setConnectionTimeout(CONNECT_TIMEOUT);
+            clientConfig.setSocketTimeout(UPLOAD_TIMEOUT);
             client = new AmazonS3Client(credential, clientConfig);
         }
     }
@@ -134,7 +137,7 @@ public class AmazonS3UploadUtil extends UploadAbstractUtil{
     @Override
     protected String upload(byte[] bytes, String contentType) {
         initClient();
-        String realName = UUID.randomUUID().toString() + ".jpg";
+        String realName = UUID.randomUUID().toString() + IMAGE_JPG;
         try (InputStream is = new ByteArrayInputStream(bytes)){
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentEncoding(StandardCharsets.UTF_8.name());
@@ -149,5 +152,10 @@ public class AmazonS3UploadUtil extends UploadAbstractUtil{
             logger.error("使用亚马逊S3上传文件出现异常",e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected void shutdown() {
+        client = null;
     }
 }

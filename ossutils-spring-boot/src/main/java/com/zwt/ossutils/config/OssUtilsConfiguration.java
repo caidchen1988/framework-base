@@ -60,14 +60,39 @@ public class OssUtilsConfiguration {
     private String qEndpointExternal;
 
     /**
+     * 百度云BOS配置
+     */
+    private String baiduAccessKey;
+    private String baiduSecretKey;
+    private String baiduEndpoint;
+    private String baiduBucket;
+    private String baiduEndpointExternal;
+
+    /**
+     * 七牛云存储配置
+     */
+    private String qiniuAccessKey;
+    private String qiniuSecretKey;
+    private String qiniuEndpoint;
+    private String qiniuBucket;
+
+    /**
+     * 华为云OBS配置
+     */
+    private String huaweiAccessKey;
+    private String huaweiSecretKey;
+    private String huaweiEndpoint;
+    private String huaweiBucket;
+
+    /**
      * 根据配置的 file.upload.server.type 选择一个上传服务器
      * @return
      */
     @Bean
-    public UploadAbstractUtil uploadAbstractUtil(){
+    public AbstractUploadUtil uploadAbstractUtil(){
         //可以根据枚举进行配置 使用阿里云或者亚马逊S3或者Azure
         UploadServerEnum uploadServerEnum = UploadServerEnum.getEnum(uploadServerType);
-        UploadAbstractUtil uploadAbstractUtil;
+        AbstractUploadUtil abstractUploadUtil;
         switch (uploadServerEnum){
             //亚马逊s3
             case AMAZON:
@@ -75,8 +100,8 @@ public class OssUtilsConfiguration {
                 s3secretKey = environment.getRequiredProperty("s3.secretKey");
                 s3endpoint = environment.getRequiredProperty("s3.endpoint");
                 s3bucket = environment.getRequiredProperty("s3.bucket");
-                uploadAbstractUtil = new AmazonS3UploadUtil(basedir,s3accessKey,s3secretKey,s3endpoint,s3bucket);
-                return uploadAbstractUtil;
+                abstractUploadUtil = new AmazonS3UploadUtil(basedir,s3accessKey,s3secretKey,s3endpoint,s3bucket);
+                return abstractUploadUtil;
             //阿里云OSS
             case ALIOSS:
                 aliyunAccessKey = environment.getRequiredProperty("aliyun.accessKey");
@@ -84,16 +109,17 @@ public class OssUtilsConfiguration {
                 aliyunBucket = environment.getRequiredProperty("aliyun.bucket");
                 aliyunEndpoint = environment.getRequiredProperty("aliyun.endpoint");
                 aliyunEndpointexternal = environment.getRequiredProperty("aliyun.endpointexternal");
-                uploadAbstractUtil = new AliOssUploadUtil(basedir,aliyunAccessKey,aliyunSecretKey,aliyunEndpoint,aliyunEndpointexternal,aliyunBucket);
-                return uploadAbstractUtil;
+                abstractUploadUtil = new AliOssUploadUtil(basedir,aliyunAccessKey,aliyunSecretKey,aliyunEndpoint,aliyunEndpointexternal,aliyunBucket);
+                return abstractUploadUtil;
             //微软Azure
             case AZURE:
                 azureAccountName = environment.getRequiredProperty("azure.accountName");
                 azureAccountKey = environment.getRequiredProperty("azure.accountKey");
                 azureEndpointSuffix = environment.getRequiredProperty("azure.endpointSuffix");
                 azureContainerName = environment.getRequiredProperty("azure.containerName");
-                uploadAbstractUtil = new AzureUploadUtil(basedir,azureAccountName,azureAccountKey,azureEndpointSuffix,azureContainerName);
-                return uploadAbstractUtil;
+                abstractUploadUtil = new AzureUploadUtil(basedir,azureAccountName,azureAccountKey,azureEndpointSuffix,azureContainerName);
+                return abstractUploadUtil;
+            //腾讯云COS
             case TENCENTCOS:
                 qAccessKey = environment.getRequiredProperty("tencent.accessKey");
                 qSecretKey = environment.getRequiredProperty("tencent.secretKey");
@@ -101,8 +127,33 @@ public class OssUtilsConfiguration {
                 qEndpoint = environment.getRequiredProperty("tencent.endpoint");
                 qRegion = environment.getRequiredProperty("tencent.region");
                 qEndpointExternal = environment.getRequiredProperty("tencent.endpointexternal");
-                uploadAbstractUtil = new TencentCOSUploadUtil(basedir,qAccessKey,qSecretKey,qBucket,qRegion,qEndpoint,qEndpointExternal);
-                return uploadAbstractUtil;
+                abstractUploadUtil = new TencentCOSUploadUtil(basedir,qAccessKey,qSecretKey,qBucket,qRegion,qEndpoint,qEndpointExternal);
+                return abstractUploadUtil;
+            //百度云BOS
+            case BAIDUBOS:
+                baiduAccessKey = environment.getRequiredProperty("baidu.accessKey");
+                baiduSecretKey = environment.getRequiredProperty("baidu.secretKey");
+                baiduBucket = environment.getRequiredProperty("baidu.bucket");
+                baiduEndpoint = environment.getRequiredProperty("baidu.endpoint");
+                baiduEndpointExternal = environment.getRequiredProperty("baidu.endpointexternal");
+                abstractUploadUtil = new BaiduBOSUploadUtil(basedir,baiduAccessKey,baiduSecretKey,baiduEndpoint,baiduBucket,baiduEndpointExternal);
+                return abstractUploadUtil;
+            //七牛云存储
+            case QINIUYUN:
+                qiniuAccessKey = environment.getRequiredProperty("qiniu.accessKey");
+                qiniuSecretKey = environment.getRequiredProperty("qiniu.secretKey");
+                qiniuBucket = environment.getRequiredProperty("qiniu.bucket");
+                qiniuEndpoint = environment.getRequiredProperty("qiniu.endpoint");
+                abstractUploadUtil = new QiNiuOSSUploadUtil(basedir,qiniuAccessKey,qiniuSecretKey,qiniuEndpoint,qiniuBucket);
+                return abstractUploadUtil;
+            //华为云OBS
+            case HUAWEIOBS:
+                huaweiAccessKey = environment.getRequiredProperty("huawei.accessKey");
+                huaweiSecretKey = environment.getRequiredProperty("huawei.secretKey");
+                huaweiBucket = environment.getRequiredProperty("huawei.bucket");
+                huaweiEndpoint = environment.getRequiredProperty("huawei.endpoint");
+                abstractUploadUtil = new HuaweiOBSUploadUtil(basedir,huaweiAccessKey,huaweiSecretKey,huaweiEndpoint,huaweiBucket);
+                return abstractUploadUtil;
             default:
                 throw new RuntimeException("暂不支持其他类型的云上传！！！");
         }
