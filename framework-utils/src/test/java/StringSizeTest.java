@@ -10,7 +10,7 @@ import java.util.Random;
  * @date 2018/9/12
  * @since 1.0
  */
-public class Test2 {
+public class StringSizeTest {
 
     /**
      * JDK里的位数算法
@@ -67,6 +67,11 @@ public class Test2 {
     }
 
     public static void main(String[] args) throws  Exception{
+//        int m=1234567;
+//        System.out.println(stringSize1(m));
+//        System.out.println(stringSize2(m));
+//        System.out.println(myStringSize1(m));
+//        System.out.println(myStringSize2(m));
 
         List<List<Long>> rowList= Lists.newArrayList();
 
@@ -90,46 +95,56 @@ public class Test2 {
                 xArrays[i]=random.nextInt();
             }
 
+
+            System.gc();
+            Thread.sleep(2000);
+            long start1=System.nanoTime();
             for(int i=0;i<xArrays.length;i++){
-                System.gc();
-                Thread.sleep(2000);
-                long start1=System.nanoTime();
                 stringSize1(xArrays[i]);
-                long end1=System.nanoTime();
-                long time1=(end1-start1)/1000;
-                System.out.println("JDK方法耗时---》"+time1+"ms");
-                cellList.add(time1);
-
-
-                System.gc();
-                Thread.sleep(2000);
-                long start4=System.nanoTime();
-                stringSize2(xArrays[i]);
-                long end4=System.nanoTime();
-                long time4=(end4-start4)/1000;
-                System.out.println("乘法耗时---》"+time4+"ms");
-                cellList.add(time4);
-
-
-                System.gc();
-                Thread.sleep(2000);
-                long start2=System.nanoTime();
-                myStringSize1(xArrays[i]);
-                long end2=System.nanoTime();
-                long time2=(end2-start2)/1000;
-                System.out.println("String方法耗时---》"+time2+"ms");
-                cellList.add(time2);
-
-
-                System.gc();
-                Thread.sleep(2000);
-                long start3=System.nanoTime();
-                myStringSize2(xArrays[i]);
-                long end3=System.nanoTime();
-                long time3=(end3-start3)/1000;
-                System.out.println("除法耗时---》"+time3+"ms");
-                cellList.add(time3);
             }
+            long end1=System.nanoTime();
+            long time1=(end1-start1)/1000;
+            System.out.println("JDK方法耗时---》"+time1+"ms");
+            cellList.add(time1);
+
+
+
+            System.gc();
+            Thread.sleep(2000);
+            long start4=System.nanoTime();
+            for(int i=0;i<xArrays.length;i++){
+                stringSize2(xArrays[i]);
+            }
+            long end4=System.nanoTime();
+            long time4=(end4-start4)/1000;
+            System.out.println("乘法耗时---》"+time4+"ms");
+            cellList.add(time4);
+
+
+
+            System.gc();
+            Thread.sleep(2000);
+            long start2=System.nanoTime();
+            for(int i=0;i<xArrays.length;i++){
+                myStringSize1(xArrays[i]);
+            }
+            long end2=System.nanoTime();
+            long time2=(end2-start2)/1000;
+            System.out.println("String方法耗时---》"+time2+"ms");
+            cellList.add(time2);
+
+
+
+            System.gc();
+            Thread.sleep(2000);
+            long start3=System.nanoTime();
+            for(int i=0;i<xArrays.length;i++){
+                myStringSize2(xArrays[i]);
+            }
+            long end3=System.nanoTime();
+            long time3=(end3-start3)/1000;
+            System.out.println("除法耗时---》"+time3+"ms");
+            cellList.add(time3);
 
             rowList.add(cellList);
         }
