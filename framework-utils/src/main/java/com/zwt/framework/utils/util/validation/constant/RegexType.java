@@ -1,18 +1,14 @@
-package com.zwt.framework.utils.util.validation;
+package com.zwt.framework.utils.util.validation.constant;
 
 /**
  * 正则类型枚举
  */
 public enum RegexType {
-	
 	NONE,
-	SPECIALCHAR,
 	CHINESE,
 	EMAIL,
-	IP, 
 	NUMBER,
-	NUMBERORNIL,
 	PHONENUMBER,
-	ID;
-	
+	EMOJI_REPLACE,
+	EMOJI_CHECK
 }
