@@ -10,8 +10,6 @@ import com.zwt.framework.utils.util.validation.util.StringUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 注解解析工具类
@@ -110,7 +108,7 @@ public class ValidateUtils {
 
 		RegexType[] regexTypes = dataValid.regexType();
 		for (RegexType regexType:regexTypes) {
-			if(regexType != RegexType.NONE && value != null){
+			if(regexType != RegexType.NONE && value != null && StringUtils.isNotBlank(value.toString())){
 				switch (regexType) {
 					case CHINESE:
 						if(!RegexUtils.isChinese(value.toString())){
@@ -166,10 +164,8 @@ public class ValidateUtils {
 
 		//4.自定义正则表达式校验逻辑
 		String regex = dataValid.regexExpression();
-		if(!regex.equals("") && value !=null){
-			Pattern pattern = Pattern.compile(regex);
-			Matcher matcher = pattern.matcher(value.toString());
-			if(!matcher.matches()){
+		if(!regex.equals("") && value !=null  && StringUtils.isNotBlank(value.toString())){
+			if(!value.toString().matches(regex)){
 				throw new ValidationException(ReturnCodeEnum.PARAMER_ERROR);
 			}
 		}
