@@ -7,7 +7,9 @@ import com.zwt.framework.utils.util.validation.exception.ValidationException;
 import com.zwt.framework.utils.util.validation.util.RegexUtils;
 import com.zwt.framework.utils.util.validation.util.StringUtils;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -75,12 +77,48 @@ public class ValidateUtils {
 				if (value.toString().length() < minLength){
 					throw new ValidationException(description +"长度不足");
 				}
-			}else if(value instanceof List){
-				if(((List) value).size() < minLength){
+			}else if(value instanceof Collection){
+				if(((Collection) value).size() < minLength){
 					throw new ValidationException(description +"长度不足");
 				}
 			}else if(value instanceof Map){
 				if(((Map)value).size() < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof Object[]){
+				if(((Object[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof int[]){
+				if(((int[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof double[]){
+				if(((double[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof float[]){
+				if(((float[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof byte[]){
+				if(((byte[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof char[]){
+				if(((char[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof long[]){
+				if(((long[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof short[]){
+				if(((short[])value).length < minLength){
+					throw new ValidationException(description +"长度不足");
+				}
+			}else if(value instanceof boolean[]){
+				if(((boolean[])value).length < minLength){
 					throw new ValidationException(description +"长度不足");
 				}
 			}
@@ -91,12 +129,48 @@ public class ValidateUtils {
 				if (value.toString().length() > maxLength){
 					throw new ValidationException(description +"长度超限");
 				}
-			}else if(value instanceof List){
-				if(((List) value).size() > maxLength){
+			}else if(value instanceof Collection){
+				if(((Collection) value).size() > maxLength){
 					throw new ValidationException(description +"长度超限");
 				}
 			}else if(value instanceof Map){
 				if(((Map) value).size() > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof Object[]){
+				if(((Object[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof int[]){
+				if(((int[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof double[]){
+				if(((double[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof float[]){
+				if(((float[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof byte[]){
+				if(((byte[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof char[]){
+				if(((char[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof long[]){
+				if(((long[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof short[]){
+				if(((short[])value).length > maxLength){
+					throw new ValidationException(description +"长度超限");
+				}
+			}else if(value instanceof boolean[]){
+				if(((boolean[])value).length > maxLength){
 					throw new ValidationException(description +"长度超限");
 				}
 			}
@@ -108,6 +182,7 @@ public class ValidateUtils {
 
 		RegexType[] regexTypes = dataValid.regexType();
 		for (RegexType regexType:regexTypes) {
+			//value允许为null或者""的情况下，value正好为null或者""，则不触发正则表达式校验
 			if(regexType != RegexType.NONE && value != null && StringUtils.isNotBlank(value.toString())){
 				switch (regexType) {
 					case CHINESE:
@@ -144,7 +219,7 @@ public class ValidateUtils {
 						}
 						break;
 					case EMOJI_CHECK:
-						if(!RegexUtils.checkEmoji(value.toString())){
+						if(RegexUtils.checkEmoji(value.toString())){
 							flag = true;
 						}
 						break;
@@ -164,19 +239,24 @@ public class ValidateUtils {
 
 		//4.自定义正则表达式校验逻辑
 		String regex = dataValid.regexExpression();
-		if(!regex.equals("") && value !=null  && StringUtils.isNotBlank(value.toString())){
-			if(!value.toString().matches(regex)){
-				throw new ValidationException(ReturnCodeEnum.PARAMER_ERROR);
+		//value允许为null或者""的情况下，value正好为null或者""，则不触发正则表达式校验
+		if (!"".equals(regex) && value != null && StringUtils.isNotBlank(value.toString())) {
+			if (!value.toString().matches(dataValid.regexExpression())) {
+				throw new ValidationException(description + "格式不正确");
 			}
 		}
 
 		//5.value为对象，需要对对象内部数据进行校验
-		if(value instanceof List){
-			for (Object obj:(List)value) {
+		if(value instanceof Collection){
+			for (Object obj:(Collection)value) {
 				valid(obj);
 			}
 		}else if(value instanceof Map){
 			for(Object obj:((Map) value).values()){
+				valid(obj);
+			}
+		}else if(value instanceof Object[]){
+			for(Object obj:(Object[]) value){
 				valid(obj);
 			}
 		}

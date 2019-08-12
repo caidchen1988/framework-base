@@ -1,5 +1,6 @@
 package com.zwt.framework.utils.util.validation.annotation;
 
+import com.zwt.framework.utils.util.validation.constant.ElementRegexType;
 import com.zwt.framework.utils.util.validation.constant.RegexType;
 import com.zwt.framework.utils.util.validation.constant.ReturnCodeEnum;
 
@@ -35,4 +36,10 @@ public @interface DataValid {
 
 	//最大长度
 	int maxLength() default -1;
+
+	//TODO 暂未实现该部分
+	//该项针对的是集合（Collection）映射（Map）数组（Array）等内部元素为基本数据类型或包装类型等对于其内部元素的校验
+	//内部元素如下：
+	//（int、long、short、byte、char、boolean、float、double、Integer、Long、Short、Byte、Character、Boolean、Float、Double、String等类型）
+	ElementRegexType[] singleElementRegexType() default ElementRegexType.NONE;
 }

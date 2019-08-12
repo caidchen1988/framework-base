@@ -7,6 +7,7 @@ import com.zwt.framework.utils.util.validation.constant.ReturnCodeEnum;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zwt
@@ -25,15 +26,70 @@ public class TestReq {
     @DataValid(nullable = false,regexType = RegexType.EMOJI_REPLACE,description = "表情符号")
     private String emoji;
 
-    @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,minLength = 2,maxLength = 16,description = "测试数组")
+    @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,minLength = 2,maxLength = 16,description = "测试集合List")
     private List<TestHelpReq> testHelpReqList;
 
-    @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,minLength = 2,maxLength = 16,description = "测试集合")
+    @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,minLength = 2,maxLength = 16,description = "测试Map")
     private Map<String,TestHelpReq> testHelpReqMap;
 
     @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,description = "测试对象")
     private TestHelpReq testHelpReq;
 
+    @DataValid(nullable = false,throwMsg = ReturnCodeEnum.PARAMER_ERROR,minLength = 2,maxLength = 16,description = "测试集合Set")
+    private Set<TestHelpReq> testHelpReqSet;
+
+    @DataValid(nullable = false,minLength = 2,maxLength = 16,description = "测试String数组")
+    private String [] strings;
+
+    @DataValid(nullable = false,minLength = 2,maxLength = 16,description = "测试int数组")
+    private int[] ints;
+
+    @DataValid(nullable = false,minLength = 2,maxLength = 16,description = "测试Integer数组")
+    private Integer[] integers;
+
+    @DataValid(nullable = false,minLength = 2,maxLength = 16,description = "测试对象数组")
+    private TestHelpReq[] testHelpReqs;
+
+
+    public int[] getInts() {
+        return ints;
+    }
+
+    public void setInts(int[] ints) {
+        this.ints = ints;
+    }
+
+    public Integer[] getIntegers() {
+        return integers;
+    }
+
+    public void setIntegers(Integer[] integers) {
+        this.integers = integers;
+    }
+
+    public TestHelpReq[] getTestHelpReqs() {
+        return testHelpReqs;
+    }
+
+    public void setTestHelpReqs(TestHelpReq[] testHelpReqs) {
+        this.testHelpReqs = testHelpReqs;
+    }
+
+    public String[] getStrings() {
+        return strings;
+    }
+
+    public void setStrings(String[] strings) {
+        this.strings = strings;
+    }
+
+    public Set<TestHelpReq> getTestHelpReqSet() {
+        return testHelpReqSet;
+    }
+
+    public void setTestHelpReqSet(Set<TestHelpReq> testHelpReqSet) {
+        this.testHelpReqSet = testHelpReqSet;
+    }
 
     public TestHelpReq getTestHelpReq() {
         return testHelpReq;

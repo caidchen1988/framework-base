@@ -8,6 +8,10 @@ import java.util.regex.Pattern;
  */
 public class RegexUtils {
 
+	private RegexUtils(){
+
+	}
+
 	/**
 	 * emoji正则表达式
 	 * 1.杂项符号及图形："[\\uD83C\\uDF00-\\uD83D\\uDDFF]"
@@ -35,7 +39,28 @@ public class RegexUtils {
 	 * 21.扑克牌："\\uD83C\\uDCCF\\uFE0F?"
 	 * 22.杂项技术符号："[\\u231A\\u231B\\u2328\\u23CF\\u23E9-\\u23F3\\u23F8-\\u23FA]\\uFE0F?"
 	 */
-	public static final String EMOJI_REGEX = "(?:[\\uD83C\\uDF00-\\uD83D\\uDDFF]|[\\uD83E\\uDD00-\\uD83E\\uDDFF]|[\\uD83D\\uDE00-\\uD83D\\uDE4F]|[\\uD83D\\uDE80-\\uD83D\\uDEFF]|[\\u2600-\\u26FF]\\uFE0F?|[\\u2700-\\u27BF]\\uFE0F?|\\u24C2\\uFE0F?|[\\uD83C\\uDDE6-\\uD83C\\uDDFF]{1,2}|[\\uD83C\\uDD70\\uD83C\\uDD71\\uD83C\\uDD7E\\uD83C\\uDD7F\\uD83C\\uDD8E\\uD83C\\uDD91-\\uD83C\\uDD9A]\\uFE0F?|[\\u0023\\u002A\\u0030-\\u0039]\\uFE0F?\\u20E3|[\\u2194-\\u2199\\u21A9-\\u21AA]\\uFE0F?|[\\u2B05-\\u2B07\\u2B1B\\u2B1C\\u2B50\\u2B55]\\uFE0F?|[\\u2934\\u2935]\\uFE0F?|[\\u3030\\u303D]\\uFE0F?|[\\u3297\\u3299]\\uFE0F?|[\\uD83C\\uDE01\\uD83C\\uDE02\\uD83C\\uDE1A\\uD83C\\uDE2F\\uD83C\\uDE32-\\uD83C\\uDE3A\\uD83C\\uDE50\\uD83C\\uDE51]\\uFE0F?|[\\u203C\\u2049]\\uFE0F?|[\\u25AA\\u25AB\\u25B6\\u25C0\\u25FB-\\u25FE]\\uFE0F?|[\\u00A9\\u00AE]\\uFE0F?|[\\u2122\\u2139]\\uFE0F?|\\uD83C\\uDC04\\uFE0F?|\\uD83C\\uDCCF\\uFE0F?|[\\u231A\\u231B\\u2328\\u23CF\\u23E9-\\u23F3\\u23F8-\\u23FA]\\uFE0F?)";
+	private static final String EMOJI_REGEX = "(?:[\\uD83C\\uDF00-\\uD83D\\uDDFF]|[\\uD83E\\uDD00-\\uD83E\\uDDFF]|[\\uD83D\\uDE00-\\uD83D\\uDE4F]|[\\uD83D\\uDE80-\\uD83D\\uDEFF]|[\\u2600-\\u26FF]\\uFE0F?|[\\u2700-\\u27BF]\\uFE0F?|\\u24C2\\uFE0F?|[\\uD83C\\uDDE6-\\uD83C\\uDDFF]{1,2}|[\\uD83C\\uDD70\\uD83C\\uDD71\\uD83C\\uDD7E\\uD83C\\uDD7F\\uD83C\\uDD8E\\uD83C\\uDD91-\\uD83C\\uDD9A]\\uFE0F?|[\\u0023\\u002A\\u0030-\\u0039]\\uFE0F?\\u20E3|[\\u2194-\\u2199\\u21A9-\\u21AA]\\uFE0F?|[\\u2B05-\\u2B07\\u2B1B\\u2B1C\\u2B50\\u2B55]\\uFE0F?|[\\u2934\\u2935]\\uFE0F?|[\\u3030\\u303D]\\uFE0F?|[\\u3297\\u3299]\\uFE0F?|[\\uD83C\\uDE01\\uD83C\\uDE02\\uD83C\\uDE1A\\uD83C\\uDE2F\\uD83C\\uDE32-\\uD83C\\uDE3A\\uD83C\\uDE50\\uD83C\\uDE51]\\uFE0F?|[\\u203C\\u2049]\\uFE0F?|[\\u25AA\\u25AB\\u25B6\\u25C0\\u25FB-\\u25FE]\\uFE0F?|[\\u00A9\\u00AE]\\uFE0F?|[\\u2122\\u2139]\\uFE0F?|\\uD83C\\uDC04\\uFE0F?|\\uD83C\\uDCCF\\uFE0F?|[\\u231A\\u231B\\u2328\\u23CF\\u23E9-\\u23F3\\u23F8-\\u23FA]\\uFE0F?)";
+
+	/**
+	 * 邮箱正则表达式
+	 */
+	private static final String EMAIL_REGEX = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+
+	/**
+	 * 中文字符正则
+	 */
+	private static final String CHINESE_REGEX = "[\u4e00-\u9fa5]";
+
+	/**
+	 * 数字正则
+	 */
+	private static final String NUMBER_REGEX = "[0-9]*";
+
+	/**
+	 * 手机号正则
+	 */
+	private static final String PHONE_REGEX = "^1[3|4|5|6|7|8|9][0-9]\\d{8}$";
+
 
 	/**
      * 判断是否是正确的邮箱地址
@@ -43,10 +68,10 @@ public class RegexUtils {
      * @return
      */
 	public static boolean isEmail(String email) {
-		if (null == email || "".equals(email))
+		if (null == email || "".equals(email)) {
 			return false;
-		String regex = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-		return email.matches(regex);
+		}
+		return email.matches(EMAIL_REGEX);
 	}
 
 	/**
@@ -55,9 +80,10 @@ public class RegexUtils {
      * @return
      */
 	public static boolean isChinese(String text) {
-		if (null == text || "".equals(text))
+		if (null == text || "".equals(text)){
 			return false;
-		Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+		}
+		Pattern p = Pattern.compile(CHINESE_REGEX);
 		Matcher m = p.matcher(text);
 		return m.find();
 	}
@@ -68,10 +94,10 @@ public class RegexUtils {
      * @return
      */
 	public static boolean isNumber(String number) {
-		if (null == number || "".equals(number))
+		if (null == number || "".equals(number)) {
 			return false;
-		String regex = "[0-9]*";
-		return number.matches(regex);
+		}
+		return number.matches(NUMBER_REGEX);
 	}
 
     /**
@@ -80,10 +106,10 @@ public class RegexUtils {
      * @return
      */
 	public static boolean isPhoneNumber(String phoneNumber) {
-		if (null == phoneNumber || "".equals(phoneNumber))
+		if (null == phoneNumber || "".equals(phoneNumber)) {
 			return false;
-		String regex = "^1[3|4|5|6|7|8|9][0-9]\\d{8}$";
-		return phoneNumber.matches(regex);
+		}
+		return phoneNumber.matches(PHONE_REGEX);
 	}
 
 	/**
