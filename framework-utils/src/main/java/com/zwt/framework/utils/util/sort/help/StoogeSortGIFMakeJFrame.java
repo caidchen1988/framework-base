@@ -9,57 +9,59 @@ import java.awt.*;
  * @date 2019/8/19
  * @since 1.0
  */
-public class CocktailSortGIFMakeJFrame extends JFrame {
+public class StoogeSortGIFMakeJFrame extends JFrame {
     public static void main(String[] args) {
-        CocktailSortGIFMakeJFrame cocktailSortGIFMakeJFrame = new CocktailSortGIFMakeJFrame();
-        CocktailSortGIFMakePanel cocktailSortGIFMakePanel = new CocktailSortGIFMakePanel();
-        cocktailSortGIFMakeJFrame.add(cocktailSortGIFMakePanel);
-        cocktailSortGIFMakeJFrame.setSize(700,800);
-        cocktailSortGIFMakeJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        cocktailSortGIFMakeJFrame.setVisible(true);
+        StoogeSortGIFMakeJFrame stoogeSortGIFMakeJFrame = new StoogeSortGIFMakeJFrame();
+        StoogeSortGIFMakePanel stoogeSortGIFMakePanel = new StoogeSortGIFMakePanel();
+        stoogeSortGIFMakeJFrame.add(stoogeSortGIFMakePanel);
+        stoogeSortGIFMakeJFrame.setSize(700,800);
+        stoogeSortGIFMakeJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        stoogeSortGIFMakeJFrame.setVisible(true);
     }
-    public CocktailSortGIFMakeJFrame(){
+    public StoogeSortGIFMakeJFrame(){
     }
 }
-class CocktailSortGIFMakePanel extends Panel{
+
+class StoogeSortGIFMakePanel extends Panel{
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         int [] array = new int[]{5,2,1,3,6,7,2,9,10,8,4};
-        CocktailSortGIFMakeHelper.cocktailSort(g,array);
+        StoogeSortGIFMakeHelper.stoogeSort(g,array);
     }
 }
-class CocktailSortGIFMakeHelper {
-    public static void cocktailSort(Graphics g,int[] src) {
-        drawPicture(g,src,-1,-1);
-        for (int i = 0; i < src.length / 2; i++) {
-            //将最小值排到队首
-            for (int j = i; j < src.length - i - 1; j++) {
-                if (src[j] > src[j + 1]) {
-                    drawPicture(g,src,j,j+1);
-                    int temp = src[j];
-                    src[j] = src[j + 1];
-                    src[j + 1] = temp;
-                    drawPicture(g,src,j,j+1);
-                }else{
-                    drawPicture(g,src,j,j+1);
-                }
-                drawPicture(g,src,-1,-1);
-            }
-            //将最大值排到队尾
-            for (int j = src.length - 1 - (i + 1); j > i; j--) {
-                if (src[j] < src[j - 1]) {
-                    drawPicture(g,src,j,j-1);
-                    int temp = src[j];
-                    src[j] = src[j - 1];
-                    src[j - 1] = temp;
-                    drawPicture(g,src,j,j-1);
-                }else{
-                    drawPicture(g,src,j,j-1);
-                }
-                drawPicture(g,src,-1,-1);
-            }
+
+class StoogeSortGIFMakeHelper {
+    public static void stoogeSort(Graphics g,int[] array) {
+        drawPicture(g,array,-1,-1);
+        stoogeSort(g,array, 0, array.length - 1);
+        drawPicture(g,array,-1,-1);
+    }
+    private static void stoogeSort(Graphics g,int[] array, int low, int high) {
+        //如果第一个数大于最后一个数，交换位置
+        if (array[low] > array[high]) {
+            drawPicture(g,array,low,high);
+            swap(array, low, high);
+            drawPicture(g,array,low,high);
         }
+        if (low + 1 >= high){
+            return;
+        }
+        int third = (high - low + 1) / 3;
+        //排序前2/3数组元素
+        stoogeSort(g,array, low, high - third);
+        //排序后2/3数组元素
+        stoogeSort(g,array, low + third, high);
+        //排序前2/3数组元素
+        stoogeSort(g,array, low, high - third);
+    }
+    private static void swap(int[] a, int b, int c) {
+        if (b == c){
+            return;
+        }
+        int temp = a[b];
+        a[b] = a[c];
+        a[c] = temp;
     }
 
     //图形单位宽度
